@@ -1,14 +1,15 @@
 
 import React, { useState } from 'react'
 import {MainContainer, ChatContainer, MessageList, Message, MessageInput} from '@chatscope/chat-ui-kit-react'
-const API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
+const API_KEY ='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' 
+// {import.meta.VITE_REACT_APP_API_KEY;}
 
 
 function AiDataContainer(){
 
   //  { const [count, setCount] = useState(0)}
   const [show, setShow] = useState(true);
-  
+//  { const messagesRef=useRef(null)}
   const [message1, setMessage1]=useState([
     {
       message:"e.g. an about us section with 3 columns of team members, centered text, rounded profile images",
@@ -54,26 +55,30 @@ let apiMessages = chatMessages.map((messageObject)=>{
 });  
 //role:"user"-> a message from the user ,"assistant"-> a response from chatGPT
 //"System"-> generally one initial message defining How we want chatgpt to talk
-// {const SystemMessage =
-// {
-//   role:"system",
-//   content:"Create code."
-// }}
+const SystemMessage =
+{
+  role:"system",
+  content:"return only code"
+}
 const apiRequestBody={
   "model": "gpt-3.5-turbo",
   "messages": [
     {
-        role: "user",
-        content:
-          " tailwind css code for button 200 x 100, light purple background, generate text on it. Please create a complete react component",
-      },
-      {
       role: "user",
       content:
-        "Please create html code with inline css that creates the following component, Material UI look and feel, return only code",
-    },
+        "for example :- Please create html code with inline css that creates the following component, Material UI look and feel, return only code",
+    }
+   ,
+   {
+    role: "user",
+    content:
+      "for example : - Create tailwind css code with complete react component and show me how it will look too",
+   }  
+  ,
     
-    { role: "user", content: "DO NOT wrap the returned code with ```" },
+    { 
+      role: "user", 
+      content: "DO NOT wrap the returned code with ```" },SystemMessage,
       
     ...apiMessages//[message1,message2,message3]
   ]
@@ -97,21 +102,35 @@ await fetch("https://api.openai.com/v1/chat/completions", {
       sender:"ChatGPT"
     }]
   );
-  setTyping(false);
 })
 console.log(messages.message)}
-
-const handleCopy=()=>{
-  navigator.clipboard.writeText(newMessages); 
-//  { props.showAlert("Copied to clipboard","success");}        
+const handleCopy = ()=>{
+  window.navigator.clipboard.writeText(messages.map((message)=>message.message))
+  
 }
+// {const handleCopy = useCallback(()=>{
+//     messagesRef.current?.select();
+//     messagesRef.current?.setSelectionRange(0, 100);
+//     window.navigator.clipboard.writeText(messages.map((message)=>message.message))
+// },[messages])}
+// {const handleCopy=()=>{
+//   navigator.clipboard.writeText(messages); 
+// { props.showAlert("Copied to clipboard","success");}   
+//className="flex-auto bg-purple-200      
+// }}
     return(
-    <div className="bg-purple-200" >
+    
+      <>
+    <div 
+    className='flex-autow-full h-full items-center bg-cover bg-no-repeat opacity-90'
+    style={{backgroundImage : `url('https://images.pexels.com/photos/17483874/pexels-photo-17483874/free-photo-of-an-artist-s-illustration-of-artificial-intelligence-ai-this-image-was-inspired-by-neural-networks-used-in-deep-learning-it-was-created-by-novoto-studio-as-part-of-the-visualising-ai-pr.png?auto=compress&cs=tinysrgb&w=600')`}}
+   >
     <br/>
-    <hr className=' animate-pulse border-[#531a4e]'/>
-    <div className='grid grid-flow-col'>
-       <div className='col-span-1'>
-        <div className=" animate-pulse py-4 px-4 flex">
+   
+    <hr className='animate-pulse border-[#531a4e]'/>
+    <div className='flex flex-col mx-32 max-w-7xl border border-purple-60 rounded-lg backdrop-blur-sm bg-purple-/60'>
+       <div className=' content-center'>
+        <div className=" animate-pulse py-4 px-[41%] flex">
         <a href="https://github.com/KiranGadhavi/Ai_Comp_Generator_vite/tree/main/vite-react" className="flex px-4 py-2 text-white bg-gradient-to-r from-violet-800 to-fuchsia-500 rounded-3xl hover:bg-purple-800 active:bg-purple-500 " >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -132,51 +151,52 @@ const handleCopy=()=>{
             </svg>
          </a>
       </div>
-       <h1 className="px-4 py-2 text-3xl font-bold text-fuchsia-950 underline ">Ask for any <button className=" bg-clip-text text-transparent bg-gradient-to-r from-purple-900 to-pink-500" onClick={() => setCount((count) => count + 1)}>
+       <h1 className="px-4 py-2 text-3xl font-bold text-fuchsia-950 underline text-center">Ask for any <button className=" bg-clip-text text-transparent bg-gradient-to-r from-purple-900 to-pink-500" onClick={() => setCount((count) => count + 1)}>
          Components...
          {/* {{count}} */}
         </button></h1>
-        <h1 className="pb-10 pt-2 justify-around font-bold px-4 py-2 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 text-2xl">AI will generate it for you</h1>
-        <h1 className=" pb-5 pt-4 px-4 py-2"><b className='p-2 bg-gradient-to-r from-fuchsia-800 to-fuchsia-600 text-white rounded-full' >1&rarr;</b><span className='bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-bold y-2'> Describe which component you need</span> </h1>
+        <h1 className="pb-10 justify-around font-bold  bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 text-2xl text-center">AI will generate it for you</h1>
+        <h1 className="text-center pb-5 pt-4 px-4 py-2"><b className='p-2 bg-gradient-to-r from-fuchsia-800 to-fuchsia-600 text-white rounded-full ' >1&rarr;</b><span className='bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-bold y-2'> Describe which component you need</span> </h1>
        
-       <div className='px-4 py-2 relative w-auto rounded-md'>
+       <div className='text-center'>
        <MainContainer>
         <ChatContainer>
-        <MessageList >
+        <MessageList  scrollBehavior = 'smooth' >
         {message1.map((message,i)=>{
-            return<Message  key={i} model={message}/>
+            return<Message className='px-4 py-2 bg-white max-w-screen-md mx-96 h-auto rounded-lg' key={i}  model={message}/>
           })}
         </MessageList>
         </ChatContainer>
         </MainContainer>
        </div>
-        {/* {<div className="px-4 py-2">
-        <textarea  id="ai_input"  onChange={(e) => setPrompt(e.target.value)}  rows={4} 
-           placeholder={"e.g. an about us section with 3 columns of team members, centered text, rounded profile images"}
-        className='h-20 w-full rounded-md'></textarea>
-        </div>} */}
-        <div className="pt-4 grid-flow-row px-4 py-2 space-x-10">
-       <div className='pt-2  grid-flow-col'>
-        <b className='p-2 animate-pulse rounded-[50%] bg-gradient-to-r from-fuchsia-800 to-fuchsia-600 text-white'> 2&rarr;</b>
+        <div className="pt-4 flex  py-2 px-96">
+       <div className='pt-2  flex-col'>
+        <b className='p-2  animate-pulse rounded-[50%] bg-gradient-to-r from-fuchsia-800 to-fuchsia-600 text-white'> 2&rarr;</b>
         </div>
         {/* {<MessageInput onSend={handleSend}></MessageInput>} */}
-        <div className='px-4  grid-flow-col'  >
-        <MessageInput className='px-8 py-4  text-white bg-purple-900 hover:bg-purple-800 active:bg-purple-500 rounded-md' onClick={() => setShow(s => ! s)}  placeholder='Type message here' onSend={handleSend} >
+        <div className='px-4 grid-flow-col w-[90%] '  >
+        <MessageInput className='px-8 py-4  text-white bg-purple-900 hover:bg-purple-800 active:bg-purple-500 rounded-md'   placeholder='Type message here' onSend={handleSend} onClick={() => setShow(s => ! s)} >
         {/* {<button className="px-4 py-2  text-white bg-purple-900 rounded-md hover:bg-purple-800 active:bg-purple-500" onClick={ () => setShow(s => ! s) }  >Generate my Component !</button>} */}
         </MessageInput>
+        {/* {<div className='absolute flex bg-white'>
+        { messages.map((msg)=>
+         {(<textarea readOnly className='h-full bg-white w-40' key={msg} value={msg.message}>
+       {msg.message}
+        </textarea>)})
+        }
+        </div>} */}
         </div>
         </div>
-      
-        </div>
-
-        <div className='px-2 py-2 col-span-2 '> 
         
-        <h1 className=' px-2 py-2   '>
+        </div>
+        
+        <div>
+        <h1 className=' px-2 py-2 text-center  '>
         <b className="bg-clip-text text-transparent bg-gradient-to-r from-purple-900 to-pink-500">Click the element to copy the code</b> 👇</h1> 
         <div className="px-4 py-2">
        { show ? 
-       <div className='bg-transparent '>
-        <p>
+       <div className='bg-transparent px-96'>
+        <p className='w-[100%]'>
        I have created a React component called <span className='bg-clip-text text-transparent bg-gradient-to-r from-purple-900 to-pink-500'>`AIChatComponentGenerator`</span> that generates various components like buttons, headers, footers, and navigation bars.
          The component is powered by AI ChatGpt technology, which allows you to customize and generate these components effortlessly.
         The <span className='bg-clip-text text-transparent bg-gradient-to-r from-purple-900 to-pink-500'>`AIChatComponentGenerator`</span> component is designed to be highly flexible and easy to use.
@@ -187,37 +207,32 @@ const handleCopy=()=>{
         :
         
        <div>
-       <div className="pb-8 text-black whitespace-normal rounded-xl cursor-copy flex">
+       <div className="pb-8 justify-center text-black whitespace-normal rounded-xl cursor-copy flex">
             <button disabled={messages.length===0} className="px-4 py-2 w-60 text-white bg-purple-900 rounded-md hover:bg-purple-800 active:bg-purple-500" onClick={handleCopy}>✂️ Copy Text</button>
          </div>
-       <div className='h-96'>
+       <div className='h-96 text-center'>
         <MainContainer>
         <ChatContainer>
-        <MessageList
-        scrollBehavior='smooth'>
+        <MessageList scrollBehavior='smooth'
+        >
     {messages.map((message,i)=>{
-            return<Message key={i} model={message} />
+            return<Message  className='px-4 py-2 bg-white max-w-screen-md mx-96 h-auto rounded-lg' key={i} model={message} />
            
           })}
         </MessageList>
         </ChatContainer> 
         </MainContainer>
         </div>
-        
         </div>
-       
        }
-      
         </div>
-                    
-        
+        </div>
 
-        </div>
         </div>
       <hr className='animate-pulse border-[#531a4e]'/>
       <br/>
       </div>
-     
+      </> 
     )}
 
 export default AiDataContainer
